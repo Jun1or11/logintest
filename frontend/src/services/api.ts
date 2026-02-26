@@ -1,4 +1,4 @@
-const API_URL = "https://logintest-oqud.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function login(usuario: string, password: string) {
   const response = await fetch(`${API_URL}/login`, {
