@@ -11,10 +11,10 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",              # desarrollo
-        "https://logintest-umber.vercel.app"       # producción
+        "http://localhost:5173",
+        "https://logintest-umber.vercel.app"
     ],
-    allow_credentials=True,
+    allow_credentials=False,   # error corregido
     allow_methods=["*"],
     allow_headers=["*"],
 )
