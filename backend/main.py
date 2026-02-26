@@ -2,8 +2,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import psycopg2
+import os
 
 app = FastAPI()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,55 +23,47 @@ class Login(BaseModel):
 # POST → login
 @app.post("/login")
 def login(datos: Login):
-    conn = psycopg2.connect(
-        host="localhost",
-        database="intranet_db",
-        user="postgres",
-        password="junior11"
-    )
+    conn = psycopg2.connect(DATABASE_URL)
     cur = conn.cursor()
+
     cur.execute(
         "SELECT id FROM usuarios WHERE usuario=%s AND password=%s AND activo=true",
         (datos.usuario, datos.password)
     )
+
     user = cur.fetchone()
     cur.close()
     conn.close()
 
     if not user:
         raise HTTPException(status_code=401, detail="Credenciales incorrectas")
+
     return {"mensaje": "Login correcto", "usuario_id": user[0]}
 
-# GET → listar usuarios (solo ejemplo)
+# GET → listar usuarios
 @app.get("/usuarios")
 def listar_usuarios():
-    conn = psycopg2.connect(
-        host="localhost",
-        database="intranet_db",
-        user="postgres",
-        password="junior11"
-    )
+    conn = psycopg2.connect(DATABASE_URL)
     cur = conn.cursor()
+
     cur.execute("SELECT id, usuario FROM usuarios WHERE activo=true")
     usuarios = cur.fetchall()
+
     cur.close()
     conn.close()
     return {"usuarios": usuarios}
 
-# PUT → actualizar usuario (ejemplo simple)
+# PUT → actualizar usuario
 @app.put("/usuarios/{usuario_id}")
 def actualizar_usuario(usuario_id: int, datos: Login):
-    conn = psycopg2.connect(
-        host="localhost",
-        database="intranet_db",
-        user="postgres",
-        password="junior11"
-    )
+    conn = psycopg2.connect(DATABASE_URL)
     cur = conn.cursor()
+
     cur.execute(
         "UPDATE usuarios SET usuario=%s, password=%s WHERE id=%s",
         (datos.usuario, datos.password, usuario_id)
     )
+
     conn.commit()
     cur.close()
     conn.close()
@@ -77,15 +72,12 @@ def actualizar_usuario(usuario_id: int, datos: Login):
 # DELETE → eliminar usuario
 @app.delete("/usuarios/{usuario_id}")
 def borrar_usuario(usuario_id: int):
-    conn = psycopg2.connect(
-        host="localhost",
-        database="intranet_db",
-        user="postgres",
-        password="junior11"
-    )
+    conn = psycopg2.connect(DATABASE_URL)
     cur = conn.cursor()
+
     cur.execute("DELETE FROM usuarios WHERE id=%s", (usuario_id,))
     conn.commit()
+
     cur.close()
     conn.close()
     return {"mensaje": f"Usuario {usuario_id} eliminado"}
