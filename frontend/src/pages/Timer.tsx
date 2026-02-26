@@ -1,29 +1,57 @@
 import { useEffect, useState } from "react";
+import "./timer.css";
 
-function Timer() {
-  const [segundos, setSegundos] = useState(60);
+const segmentMap: Record<string, string[]> = {
+  "0": ["a", "b", "c", "d", "e", "f"],
+  "1": ["b", "c"],
+  "2": ["a", "b", "g", "e", "d"],
+  "3": ["a", "b", "c", "d", "g"],
+  "4": ["f", "g", "b", "c"],
+  "5": ["a", "f", "g", "c", "d"],
+  "6": ["a", "f", "e", "d", "c", "g"],
+  "7": ["a", "b", "c"],
+  "8": ["a", "b", "c", "d", "e", "f", "g"],
+  "9": ["a", "b", "c", "d", "f", "g"],
+};
 
-  useEffect(() => {
-    if (segundos === 0) return;
-
-    const interval = setInterval(() => {
-      setSegundos((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [segundos]);
-
-  const minutos = String(Math.floor(segundos / 60)).padStart(2, "0");
-  const seg = String(segundos % 60).padStart(2, "0");
-
+const Digit: React.FC<{ value: string }> = ({ value }) => {
+  const segments = segmentMap[value] || [];
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1 style={{ fontSize: "64px" }}>
-        {minutos}:{seg}
-      </h1>
-      <p>Cuenta regresiva</p>
+    <div className="digit">
+      {["a", "b", "c", "d", "e", "f", "g"].map((s) => (
+        <div
+          key={s}
+          className={`segment ${s} ${segments.includes(s) ? "on" : ""}`}
+        />
+      ))}
     </div>
   );
-}
+};
 
-export default Timer;
+const SevenSegmentClock: React.FC = () => {
+  const [hora, setHora] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setHora(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const h = String(hora.getHours()).padStart(2, "0");
+  const m = String(hora.getMinutes()).padStart(2, "0");
+  const s = String(hora.getSeconds()).padStart(2, "0");
+
+  return (
+    <div className="clock">
+      <Digit value={h[0]} />
+      <Digit value={h[1]} />
+      <div className="colon">:</div>
+      <Digit value={m[0]} />
+      <Digit value={m[1]} />
+      <div className="colon">:</div>
+      <Digit value={s[0]} />
+      <Digit value={s[1]} />
+    </div>
+  );
+};
+
+export default SevenSegmentClock;
