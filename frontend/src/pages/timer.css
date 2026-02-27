@@ -1,25 +1,123 @@
-.container {
+:root {
+  --segment-width: 35px;
+  --segment-thickness: 6px;
+  --color-on: #09c7c7;
+  --color-off: #1a1a1a;
+  --glow: 0 0 12px rgba(31, 13, 192, 0.6);
+}
+
+body {
+  margin: 0;
   height: 100vh;
+  display: flex;
+  justify-content: center;  /* centro horizontal */
+  align-items: center;      /* centro vertical */
+  background: #1f1f1f;      /* opcional */
+}
+
+/* contenedor */
+.clock {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  gap: 9px;
+  padding: 40px;
 }
 
-.boton {
-  padding: 20px 40px;
-  font-size: 24px;
-  border-radius: 10px;
-  cursor: pointer;
+/* Digitos */
+.digit {
+  position: relative;
+  width: calc(var(--segment-width) + 10px);
+  height: calc(var(--segment-width) * 2);
 }
 
-/* Parpadeo */
-.flash {
-  animation: parpadeo 0.1s infinite;
+/* base 7 */
+.segment {
+  position: absolute;
+  background-color: var(--color-off);
+  transition: background-color 0.2s, box-shadow 0.2s, opacity 0.2s;
 }
 
-@keyframes parpadeo {
-  0% { background-color: black; }
-  50% { background-color: white; }
-  100% { background-color: black; }
+/* puntas */
+.segment.a,
+.segment.g,
+.segment.d {
+  width: var(--segment-width);
+  height: var(--segment-thickness);
+  clip-path: polygon(
+    10% 0,
+    90% 0,
+    100% 50%,
+    90% 100%,
+    10% 100%,
+    0 50%
+  );
+}
+
+/* puntas */
+.segment.b,
+.segment.c,
+.segment.e,
+.segment.f {
+  width: var(--segment-thickness);
+  height: calc(var(--segment-width) - 4px);
+  clip-path: polygon(
+    50% 0,
+    100% 10%,
+    100% 90%,
+    50% 100%,
+    0 90%,
+    0 10%
+  );
+}
+
+/* posciones */
+.segment.a { top: 0; left: 5px; }
+.segment.b { top: 3px; right: 0; }
+.segment.c { bottom: 3px; right: 0; }
+.segment.d { bottom: 0; left: 5px; }
+.segment.e { bottom: 3px; left: 0; }
+.segment.f { top: 3px; left: 0; }
+.segment.g { top: 50%; left: 5px; transform: translateY(-50%); }
+
+/* estados */
+.segment.off {
+  opacity: 0.15;
+}
+
+.segment.on {
+  background-color: var(--color-on);
+  box-shadow: var(--glow);
+  opacity: 1;
+  z-index: 2;
+}
+
+/* : puntos */
+.colon-dots {
+  width: 10px;
+  height: 40px;
+  position: relative;
+  --color-on: #7006d3;
+}
+
+.colon-dots::before,
+.colon-dots::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-on);
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  box-shadow: var(--glow);
+  animation: blink 1s infinite;
+}
+
+.colon-dots::before { top: 8px; }
+.colon-dots::after { bottom: 8px; }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
