@@ -1,81 +1,25 @@
-.clock {
+.container {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 100px;
-  gap: 8px;
+  background-color: black;
 }
 
-.digit {
-  position: relative;
-  width: 40px;
-  height: 70px;
+.boton {
+  padding: 20px 40px;
+  font-size: 24px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-.segment {
-  position: absolute;
-  background-color: #333;
-  opacity: 0.1;
-  transition: opacity 0.2s;
+/* Parpadeo */
+.flash {
+  animation: parpadeo 0.1s infinite;
 }
 
-/* Segmentos */
-.segment.a {
-  top: 0;
-  left: 5px;
-  width: 30px;
-  height: 6px;
-}
-
-.segment.b {
-  top: 5px;
-  right: 0;
-  width: 6px;
-  height: 28px;
-}
-
-.segment.c {
-  bottom: 5px;
-  right: 0;
-  width: 6px;
-  height: 28px;
-}
-
-.segment.d {
-  bottom: 0;
-  left: 5px;
-  width: 30px;
-  height: 6px;
-}
-
-.segment.e {
-  bottom: 5px;
-  left: 0;
-  width: 6px;
-  height: 28px;
-}
-
-.segment.f {
-  top: 5px;
-  left: 0;
-  width: 6px;
-  height: 28px;
-}
-
-.segment.g {
-  top: 32px;
-  left: 5px;
-  width: 30px;
-  height: 6px;
-}
-
-.segment.on {
-  background-color: #2ecc71;
-  opacity: 1;
-}
-
-.colon {
-  font-size: 48px;
-  color: #2ecc71;
-  line-height: 70px;
+@keyframes parpadeo {
+  0% { background-color: black; }
+  50% { background-color: white; }
+  100% { background-color: black; }
 }
