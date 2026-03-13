@@ -1,0 +1,205 @@
+PROCEDIMIENTO BACKEND (FastAPI + Python)
+1️⃣ Crear carpetas
+intranet/
+└── backend/
+2️⃣ Crear archivo principal
+
+Dentro de backend:
+
+main.py
+
+Contenido mínimo:
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def inicio():
+    return {"mensaje": "Backend activo"}
+3️⃣ Abrir CMD en backend
+intranet/backend
+4️⃣ Crear entorno virtual
+python -m venv venv
+5️⃣ Activar entorno virtual
+venv\Scripts\activate
+
+✔ Debe aparecer (venv)
+
+6️⃣ Instalar librerías
+pip install -r requirements.txt
+7️⃣ Ejecutar el servidor
+uvicorn main:app --reload
+8️⃣ Probar en el navegador
+http://127.0.0.1:8000
+http://127.0.0.1:8000/docs
+🔁 SIEMPRE que trabajes
+Entrar a backend
+→ activar venv ------------venv\Scripts\activate
+→ uvicorn main:app --reload -------------uvicorn main:app --reload
+
+
+y al cargar entar /docs
+http://127.0.0.1:8000/docs
+
+
+-------------------------------------------------------------------------------------------------------------------
+frontend creact y typescript
+
+1️⃣ Crear carpetas
+intranet/
+└── frontend/
+2️⃣ Abrir CMD / Terminal en frontend
+
+Ubícate en:
+
+intranet/frontend
+3️⃣ Crear proyecto React con TypeScript
+
+Ejecutar:
+
+npm create vite@latest . -- --template react-ts
+
+📌 Esto:
+
+Crea React
+
+Configura TypeScript
+
+Usa Vite como servidor de desarrollo
+
+4️⃣ Instalar dependencias
+npm install
+5️⃣ Ejecutar servidor frontend <esto se puede hacer desde el visual code<
+npm run dev
+
+✔ Debe mostrarse algo como:
+
+Local: http://localhost:5173
+
+
+import "./App.css";
+
+
+---------------------------render backend------------------------------------------------
+🚀 Subir Backend FastAPI a Render (resumen corto)
+1️⃣ Subir el código a GitHub
+
+Backend en un repositorio
+
+main.py, database.py, requirements.txt
+
+2️⃣ Crear servicio en Render
+
+New → Web Service
+
+Conectar repositorio GitHub
+
+Build command:
+
+pip install -r requirements.txt
+
+Start command:
+
+uvicorn main:app --host 0.0.0.0 --port 10000
+3️⃣ Subir la base de datos a Neon
+
+Crear proyecto PostgreSQL en Neon
+
+Obtener DATABASE_URL
+
+❗ LO QUE TE FALTABA (CLAVE)
+4️⃣ Agregar Environment Variable en Render
+
+En Render → Settings → Environment Variables:
+
+KEY
+
+DATABASE_URL
+
+VALUE
+
+postgresql://usuario:password@host/db?sslmode=require
+
+👉 Render NO se conecta solo, hay que decirle la URL.
+
+5️⃣ Cambiar el código (muy importante)
+
+❌ NO usar localhost
+❌ NO escribir la contraseña en el código
+
+✅ Usar:
+
+import os
+DATABASE_URL = os.getenv("DATABASE_URL")
+psycopg2.connect(DATABASE_URL)
+6️⃣ Commit / Push (o editar en GitHub)
+
+Guardar cambios
+
+Render redeploya solo
+
+7️⃣ Probar
+
+Abrir:
+
+https://tu-backend.onrender.com/usuarios
+
+Si devuelve JSON → ✅ TODO OK
+
+
+
+----------------------------------------conexión entre pagina subuir mi pagina-----------------------------------------------------------------------
+
+
+
+✅ RESUMEN: Conexión Frontend ↔ Backend ↔ Base de Datos
+🔹 FRONTEND (Vercel / React + Vite)
+
+El frontend NO debe tener la URL del backend escrita en el código.
+
+Usa una Environment Variable.
+
+En Vercel → Settings → Environment Variables:
+
+VITE_API_URL = https://logintest-oqud.onrender.com
+
+En el código (api.ts):
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+👉 Esta variable conecta el frontend con el backend.
+
+🔹 BACKEND (Render / FastAPI)
+
+El backend NO debe tener datos de la BD en el código.
+
+Usa una Environment Variable.
+
+En Render → Environment Variables:
+
+DATABASE_URL = postgresql://usuario:password@host:puerto/dbname
+
+En el código (main.py):
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+psycopg2.connect(DATABASE_URL)
+
+👉 Esta variable conecta el backend con PostgreSQL.
+
+🔹 CORS (Backend – obligatorio)
+allow_origins=[
+  "http://localhost:5173",
+  "https://logintest-umber.vercel.app"
+],
+allow_credentials=False
+
+👉 Permite que el frontend se comunique con el backend.
+
+🔗 DEPENDENCIAS CLARAS
+
+Frontend 👉 depende de VITE_API_URL
+
+Backend 👉 depende de DATABASE_URL
+
+BD 👉 solo accesible desde backend
