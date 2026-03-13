@@ -1,4 +1,7 @@
 # Proyecto Login
+[[Visitar GitHub](https://logintest-umber.vercel.app/)]
+usuario: junior
+password: 11
 
 ## 🚀 Instalación y Ejecución desde GitHub
 
