@@ -30,6 +30,7 @@ uvicorn main:app --reload
 5️⃣ Probar en el navegador:  
 http://127.0.0.1:8000  
 http://127.0.0.1:8000/docs  
+[[https://logintest-oqud.onrender.com/docs#/](https://logintest-oqud.onrender.com/docs#/)]
 
 🔁 Siempre que trabajes:  
 cd intranet/backend  
